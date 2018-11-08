@@ -1,0 +1,82 @@
+library ieee;
+use ieee.std_logic_1164.all; 
+use ieee.numeric_std.all;
+
+entity MOD_AUTOMAT is						   --in mare parte proiecul meu consta intr-un MUX ,intrare clk ,iar iesirile sunt cele 3(4) moduri de functionare ale sistemului
+	port (cl:in bit;					--clk cu frecventa de 50 MHz
+	B: in std_logic_vector (7 downto 0) :="00000000";	  --cele 8 intrerupatore de care dispune Nexys 2
+	L : out std_logic_vector (7 downto 0));	   		--cele 8 LED-uri care le are Nexys 2;
+end entity;
+
+architecture fct of MOD_AUTOMAT is
+begin
+	process(cl)						   	
+	variable a :integer :=0;				--numara clock-urile			
+	variable b :std_logic_vector(7 downto 0) := "00000000";	--led "auxiliat"										
+	variable trans:integer := 0;				--intervalul de timp pe care se executa un ciclu d+c
+	variable c: integer :=0;				--
+	variable d: integer :=0;				--
+	variable ok : integer :=0;				--
+	variable duty_1:integer:=1;				--
+	variable duty_2:integer:=0;				--
+	
+	variable g:integer:=100;				--numar de cicluri in intervalul de pe switch-uri
+	
+ begin
+	
+	trans := to_integer(unsigned(B));			--transforma din std_logic in integer
+	trans := trans *500000;					--inmultim cu 500000 pentru ca luam o sutime dintr-o secunda (50_000_000/100)(clock de 50 de MHz)
+	if ok=0 then						-- resetarea despre care vorbim mai jos
+		 c:=trans/g;
+		 d:=trans-c;
+		 ok:=1;
+	end if;
+	
+	if cl='1' and cl'event then				--daca este pe rising edge
+	a:=a+1;							--numaram
+	
+	if duty_1 =1 then					--daca suntem pe primul ciclu					
+			if a=d and b="00000000" then		--folosim if de la modul test ,adaptat
+				b:="11111111";
+				d:=d-2*trans/g;
+				a:=0;
+			elsif a=c and b="11111111" then
+				b:="00000000";
+				c:=c+2*trans/g;
+				a:=0;
+			end if;
+		 end if; 
+		
+		if duty_2 = 1 then				--daca suntem in al doilea ciclu
+			if a=d and b="00000000" then		--folosim if-ul de la punctul anterior doar ca c scade si d creste
+				b:="11111111";
+				d:=d+2*trans/g;
+				a:=0;
+			elsif a=c and b="11111111" then
+				b:="00000000";
+				c:=c-2*trans/g;
+				a:=0;
+			end if;
+			
+			if d>trans then				--daca d>un ciclu atunci resetam totul 
+				ok:=0;
+				duty_2:=0;
+				duty_1:=1;
+			end if;
+		end if;
+		
+		if c>trans then					--daca c>un ciclu atunci c ia valoarea lui d de la inceput si d valoarea lui c de la inceput
+			duty_2:=1;				--dupa care continuam cu modul descrescator
+			duty_1:=0;
+			d:=trans/g;
+			c:=c-d;
+		end if;
+			
+	end if;
+	
+	L<=b;
+	
+	
+end process;
+end architecture;
+
