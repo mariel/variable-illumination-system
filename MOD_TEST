@@ -1,0 +1,137 @@
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity MOD_TEST is
+	port(c:in bit;
+	L : out std_logic_vector(7 downto 0):="00000000");         
+end entity;
+
+architecture fct_div of MOD_TEST is
+begin
+	process (c)											
+	variable a_7:integer:=0;										--mod test
+	variable a_6:integer:=0;
+	variable a_5:integer:=0;
+	variable a_4:integer:=0;
+	variable a_3:integer:=0;
+	variable a_2:integer:=0;
+	variable a_1:integer:=0;
+	variable a_0:integer:=0;
+	
+	variable b:std_logic_vector(7 downto 0):="00000000"; 
+	variable c_7:integer:= 5000;						
+	variable c_6:integer:=10000;
+	variable c_5:integer:=15000;
+	variable c_4:integer:=20000;
+	variable c_3:integer:=25000;
+	variable c_2:integer:=30000;
+	variable c_1:integer:=35000;
+	variable c_0:integer:=40000;
+	
+	variable d:integer:= 495000;	   					  
+	variable e:integer:= 990000;
+	variable f:integer:=1485000;
+	variable g:integer:=1980000;
+	variable h:integer:=2475000;
+	variable i:integer:=2970000;
+	variable j:integer:=3465000;
+	variable k:integer:=3960000;
+	
+	
+	begin 
+		if c='1' and c'event then
+	  		a_7:=a_7+1;
+	  		a_6:=a_6+1;
+	 		a_5:=a_5+1;
+			a_4:=a_4+1;
+			a_3:=a_3+1;
+			a_2:=a_2+1;
+			a_1:=a_1+1;
+			a_0:=a_0+1;
+	  
+	  		if a_7=d and b(7)='0' then
+		  		b(7):='1'; a_7:=0; d:=d-5000;
+	 		elsif a_7=c_7 and b(7)='1' then
+		   		b(7):='0'; a_7:=0;c_7:=c_7+5000;
+	   		end if;	 
+	   
+	   		if a_6=e and b(6)='0' then
+		   		b(6):='1'; a_6:=0; e:=e-(2*5000);
+	   		elsif a_6=c_6 and b(6)='1' then
+		   		b(6):='0'; a_6:=0;c_6:=c_6+(2*5000);
+	   		end if;
+	   
+	   		if a_5=f and b(5)='0' then
+		   		b(5):='1'; a_5:=0; f:=f-(3*5000);
+	   		elsif a_5=c_5 and b(5)='1' then
+		   		b(5):='0'; a_5:=0;c_5:=c_5+(3*5000);
+	  		end if;
+	   
+	   		if a_4=g and b(4)='0' then
+		   		b(4):='1'; a_4:=0; g:=g-(4*5000);
+	   		elsif a_4=c_4 and b(4)='1' then
+		   		b(4):='0'; a_4:=0;c_4:=c_4+(4*5000);
+	   		end if;
+	   
+	   		if a_3=h and b(3)='0' then
+		   		b(3):='1'; a_3:=0; h:=h-(5*5000);
+	   		elsif a_3=c_3 and b(3)='1' then
+		   		b(3):='0'; a_3:=0;c_3:=c_3+(5*5000);
+	   		end if;
+	   
+	   		if a_2=i and b(2)='0' then
+		   		b(2):='1'; a_2:=0; i:=i-(6*5000);
+	   		elsif a_2=c_2 and b(2)='1' then
+		   		b(2):='0'; a_2:=0;c_2:=c_2+(6*5000);
+	   		end if;
+	   
+	   		if a_1=j and b(1)='0' then
+		   		b(1):='1'; a_1:=0; j:=j-(7*5000);
+	   		elsif a_1=c_1 and b(1)='1' then
+		   		b(1):='0'; a_1:=0;c_1:=c_1+(7*5000);
+	   		end if;
+	   
+	   		if a_0=k and b(0)='0' then
+		   		b(0):='1'; a_0:=0; k:=k-(8*5000);
+	   		elsif a_0=c_0 and b(0)='1' then
+		   		b(0):='0'; a_0:=0;c_0:=c_0+(8*5000);
+	   		end if; 
+			   
+			   
+	    	if c_7>500000 then								  --cand modul deschis ajunge a fie de lungimea unui ciclu pornim de la inceput
+		   		c_7:=5000;d:=495000;	   
+	   		end if;
+			   
+	   		if c_6>1000000 then 
+		   		c_6:=10000;e:=990000;
+	   		end if;
+			   
+	   		if c_5>1500000 then
+		   		c_5:=15000;f:=1485000;
+	   		end if;
+			   
+	   		if c_4>2000000 then
+		   		c_4:=20000;g:=1980000;
+	   		end if;
+			   
+	   		if c_3>2500000 then 
+		   		c_3:=25000;h:=2475000;
+	   		end if;
+			   
+	   		if c_2>3000000 then 
+		   		c_2:=30000;i:=2970000;
+	   		end if;
+			   
+	   		if c_1>3500000 then
+		   		c_1:=35000;j:=3465000;
+	   		end if;
+			   
+	   		if c_0>4000000 then
+		   		c_0:=40000;k:=3960000;
+	   		end if;
+	   				
+	 	end if;
+	 
+			L<=b;				
+	end process;	
+end architecture;
