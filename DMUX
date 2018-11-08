@@ -1,0 +1,34 @@
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity DMUX is
+	port(c: in bit ;
+	L_A:in STD_logic_vector(7 downto 0);
+	L_M: in std_logic_vector(7 downto 0);
+	L_V: in std_logic_vector(7 downto 0);
+	L_T: in std_logic_vector(7 downto 0);
+	S: in bit_vector(1 downto 0);
+	LE: out std_logic_vector(7 downto 0));
+end entity;
+
+architecture wow of DMUX is
+begin
+	process(c)
+	begin
+	if S="00" then
+		LE<=L_M;
+	end if;
+	
+	if S="01" then
+		LE<=L_T;
+	end if;
+	
+	if S="10" then
+		LE<=L_A;
+	end if;
+	
+	if S="11" then
+		LE<=L_V;
+	end if;
+	end process;
+end architecture;
