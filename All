@@ -1,0 +1,82 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity MUX is											   --in mare parte proiecul meu consta intr-un MUX ,intrare clk ,iar iesirile sunt cele 3(4) moduri de functionare ale sistemului
+	port (clk:in bit;									   --clk cu frecventa de 50 MHz
+	BUTOANE: in std_logic_vector (7 downto 0) :="00000000";	   --cele 8 intrerupatore de care dispune Nexys 2
+	SELECTII: in bit_vector (1 downto 0) :="00";		   --doua din cele 4 butoane de care dispune Nexys 2;
+	LED : out std_logic_vector (7 downto 0));	   --cele 8 LED-uri care le are Nexys 2;
+end entity;
+
+architecture fct of MUX is
+
+component MOD_MANUAL
+	port (B: in std_logic_vector(7 downto 0):="00000000"; 
+	c:in bit;
+	L : out std_logic_vector(7 downto 0));
+end component;
+
+component MOD_TEST 
+	port(c:in bit;
+	L:out std_logic_vector(7 downto 0):="00000000");
+end component;
+
+component MOD_AUTOMAT
+	port (cl:in bit;									   
+	B: in std_logic_vector (7 downto 0) :="00000000";	   		   
+	L : out std_logic_vector (7 downto 0):="00000000");
+end component;
+
+component MOD_VALURI 
+	port (cl:in bit;									   --clk cu frecventa de 50 MHz
+	B: in std_logic_vector (7 downto 0) :="00000000";	   --cele 8 intrerupatore de care dispune Nexys 2
+	L: out std_logic_vector (7 downto 0):="00000000");
+end component;
+
+component DMUX 
+		port(c: in bit ;
+	L_A:in STD_logic_vector(7 downto 0);
+	L_M: in std_logic_vector(7 downto 0);
+	L_V: in std_logic_vector(7 downto 0);
+	L_T: in std_logic_vector(7 downto 0);
+	S: in bit_vector(1 downto 0);
+	LE: out std_logic_vector(7 downto 0));
+end component;
+
+signal LED_M:std_logic_vector(7 downto 0):="00000000";
+signal LED_T:std_logic_vector(7 downto 0):="00000000";
+signal LED_A:std_logic_vector(7 downto 0):="00000000";
+signal LED_V:std_logic_vector(7 downto 0):="00000000";
+begin
+C1: MOD_MANUAL port map (BUTOANE,clk,LED_M);
+C2: MOD_TEST   port map (clk,LED_T);
+C3: MOD_AUTOMAT port map (clk,BUTOANE,LED_A);
+C4: MOD_VALURI port map(clk,BUTOANE,LED_V);
+C5: DMUX port map (clk,LED_A,LED_M,LED_V,LED_T,SELECTII,LED) ;
+end architecture;
+
+
+
+begin 
+		if cl='1' and cl'event then
+	  		a_7:=a_7+1;
+	  		a_6:=a_6+1;
+	 		a_5:=a_5+1;
+			a_4:=a_4+1;
+			a_3:=a_3+1;
+			a_2:=a_2+1;
+			a_1:=a_1+1;
+			a_0:=a_0+1;
+			
+			if c_7>=500000 then								  
+		   		c_7:=5000;d:=495000;	   
+	   		end if;
+
+			if a_7=d and b(7)='0' then
+		  		b(7):='1'; a_7:=0; d:=d-5000;
+	 		elsif a_7=c_7 and b(7)='1' then
+		   		b(7):='0'; a_7:=0;c_7:=c_7+5000;
+	   		end if;	
+		end if;
+end process;
